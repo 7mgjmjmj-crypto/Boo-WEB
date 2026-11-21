@@ -1,0 +1,44 @@
+/* General Settings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f1eb;
+    color: #333;
+    text-align: center;
+}
+
+/* Header */
+header {
+    padding: 100px 20px;
+    background-color: #ded2c2;
+}
+
+header h1 {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+header p {
+    font-size: 18px;
+}
+
+/* Main Section */
+main {
+    padding: 60px 20px;
+}
+
+main h2 {
+    margin-bottom: 15px;
+}
+
+/* Footer */
+footer {
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
