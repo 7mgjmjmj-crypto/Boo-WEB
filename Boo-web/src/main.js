@@ -1,46 +1,4 @@
-
 import './style.css'
 
-document.querySelector('#app').innerHTML = `
-  <header class="navbar">
-    <a href="#home" class="logo">BOO<span>.</span></a>
-
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#menu">Menu</a>
-    </nav>
-
-    <a href="#contact" class="nav-button">Say Hello</a>
-  </header>
-
-  <main>
-    <section class="hero" id="home">
-
-      <p class="eyebrow">
-        A LITTLE MOMENT OF HAPPINESS
-      </p>
-
-      <h1>
-        Good things<br />
-        come in <span>little</span><br />
-        moments.
-      </h1>
-
-      <p class="description">
-        A cozy little world made for good coffee,
-        sweet moments and beautiful memories.
-      </p>
-
-      <a href="#menu" class="hero-button">
-        Discover BOO ↗
-      </a>
-
-      <div class="hero-footer">
-        <span>MADE WITH LOVE</span>
-        <span>EST. 2026</span>
-      </div>
-
-    </section>
-  </main>
-`
+// Intro
+import './components/Intro/Intro.js'
