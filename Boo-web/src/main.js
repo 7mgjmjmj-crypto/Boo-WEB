@@ -1,15 +1,12 @@
-
 import './style.css'
+import { Navbar, initNavbar } from './components/Navbar/Navbar.js'
+import { Menu, initMenu } from './components/Menu/Menu.js'
 
 document.querySelector('#app').innerHTML = `
   <header class="navbar">
     <a href="#home" class="logo">BOO<span>.</span></a>
 
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#menu">Menu</a>
-    </nav>
+   ${Navbar()}
 
     <a href="#contact" class="nav-button">Say Hello</a>
   </header>
@@ -42,5 +39,9 @@ document.querySelector('#app').innerHTML = `
       </div>
 
     </section>
+
+    ${Menu()}
   </main>
 `
+initNavbar()
+initMenu()

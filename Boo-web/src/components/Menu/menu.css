@@ -1,0 +1,310 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Tajawal:wght@400;500&display=swap');
+
+.menu {
+  --menu-ink: #30251e;
+  --menu-accent: #a56c42;
+  --menu-muted: #8a7b6e;
+  --menu-paper: #efebe6;
+
+  padding: 90px 7% 110px;
+  background: var(--menu-paper);
+  color: var(--menu-ink);
+}
+
+/* ── الشعار ── */
+.menu__brand {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--menu-ink);
+  margin-bottom: 26px;
+}
+
+.menu__brand .ghost-icon {
+  width: 46px;
+  height: 54px;
+}
+
+.menu__brand span {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 7px;
+  margin-right: -7px;
+}
+
+/* ── التبويبات ── */
+.menu-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 46px;
+}
+
+.menu-tab {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  padding: 11px 24px;
+  border-radius: 40px;
+  border: 1px solid rgba(48, 37, 30, 0.15);
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--menu-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-tab:hover {
+  color: var(--menu-ink);
+  border-color: rgba(48, 37, 30, 0.35);
+}
+
+.menu-tab.is-active {
+  background: var(--menu-ink);
+  border-color: var(--menu-ink);
+  color: #fffaf2;
+}
+
+/* ── رأس القسم ── */
+.menu-panel {
+  display: none;
+}
+
+.menu-panel.is-active {
+  display: block;
+  animation: menuFade 0.45s ease;
+}
+
+@keyframes menuFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.menu-panel__head {
+  margin-bottom: 44px;
+}
+
+.menu-panel__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: clamp(42px, 6.5vw, 84px);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.menu-panel__sub {
+  font-family: 'Tajawal', sans-serif;
+  color: var(--menu-muted);
+  font-size: 15px;
+  margin-top: 12px;
+  letter-spacing: 1px;
+}
+
+/* ── عنوان المجموعة ── */
+.menu-group {
+  margin-bottom: 56px;
+}
+
+.menu-group__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 12px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid rgba(48, 37, 30, 0.12);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--menu-accent);
+}
+
+.menu-group__title span[dir='rtl'] {
+  font-family: 'Tajawal', sans-serif;
+  letter-spacing: 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ── الشبكة ── */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+/* ── الكرت (زجاجي) ── */
+.menu-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 22px;
+  border-radius: 34px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35));
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -10px 24px rgba(48, 37, 30, 0.04),
+    0 10px 30px rgba(48, 37, 30, 0.07);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 40px rgba(48, 37, 30, 0.12);
+}
+
+.menu-card__media {
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.menu-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.menu-card:hover .menu-card__media img {
+  transform: scale(1.04);
+}
+
+/* الصنف اللي بدون صورة: شعار الشبح بدل الصورة */
+.menu-card--no-image {
+  justify-content: center;
+}
+
+.menu-card--no-image .menu-card__media {
+  aspect-ratio: auto;
+  height: 96px;
+  color: rgba(165, 108, 66, 0.35);
+}
+
+.menu-card--no-image .ghost-icon {
+  width: 40px;
+  height: 46px;
+}
+
+/* ── النصوص ── */
+.menu-card__body {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.menu-card__price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--menu-ink);
+}
+
+.menu-card__price span {
+  white-space: nowrap;
+}
+
+.menu-card__price small {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.menu-card__line {
+  width: 34px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.menu-card__size {
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.menu-card__en {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 6px;
+}
+
+.menu-card__ar {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 16px;
+  color: var(--menu-ink);
+  margin-top: 4px;
+}
+
+/* ── الشاشات الأصغر ── */
+@media (max-width: 1000px) {
+  .menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .menu {
+    padding: 70px 5% 90px;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .menu-tab {
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 9px 16px;
+  }
+
+  .menu-card {
+    padding: 10px 10px 16px;
+    border-radius: 24px;
+  }
+
+  .menu-card__media {
+    border-radius: 16px;
+  }
+
+  .menu-card__price {
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .menu-card__line {
+    width: 14px;
+  }
+
+  .menu-card__en {
+    font-size: 14px;
+  }
+
+  .menu-card__ar {
+    font-size: 14px;
+  }
+
+  .menu-group__title {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+}
