@@ -157,7 +157,7 @@ function buildMarkup(root) {
         <div class="boo-text" data-index="${i}">
           <div class="boo-title" role="heading" aria-level="2"><span class="boo-line">${s.line1}</span><span class="boo-line">${s.line2}</span></div>
           <p class="boo-desc boo-line">${s.desc}</p>
-          <a class="boo-btn boo-line" href="#">SHOW MENU</a>
+          <a class="boo-btn boo-line" href="#menu">SHOW MENU</a>
         </div>`
     ).join('')}
     </div>
@@ -175,6 +175,48 @@ function buildMarkup(root) {
       </div>
     </aside>
   `
+}
+
+// ---- smooth, cinematic scroll to a section ----
+// Slow start, fast middle, very soft landing (easeInOutQuint).
+function smoothScrollTo(target, duration = 1400) {
+    const startY = window.scrollY
+    const endY = target.getBoundingClientRect().top + window.scrollY
+    const distance = endY - startY
+    if (Math.abs(distance) < 2) return
+
+    // Respect users who turn motion off: jump straight there.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.scrollTo({ top: endY, behavior: 'instant' })
+        return
+    }
+
+    const ease = (t) => (t < 0.5 ? 16 * t ** 5 : 1 - Math.pow(-2 * t + 2, 5) / 2)
+    const html = document.documentElement
+    const prevBehavior = html.style.scrollBehavior
+    html.style.scrollBehavior = 'auto' // stop CSS smooth-scroll fighting the animation
+
+    let start = null
+    let cancelled = false
+    const cancel = () => (cancelled = true)
+    // If the visitor scrolls or taps during the animation, give control back to them.
+    window.addEventListener('wheel', cancel, { once: true, passive: true })
+    window.addEventListener('touchstart', cancel, { once: true, passive: true })
+
+    const finish = () => {
+        html.style.scrollBehavior = prevBehavior
+        window.removeEventListener('wheel', cancel)
+        window.removeEventListener('touchstart', cancel)
+    }
+    const step = (now) => {
+        if (cancelled) return finish()
+        if (start === null) start = now
+        const t = Math.min(1, (now - start) / duration)
+        window.scrollTo(0, startY + distance * ease(t))
+        if (t < 1) requestAnimationFrame(step)
+        else finish()
+    }
+    requestAnimationFrame(step)
 }
 
 function initBooShowcase(root) {
@@ -362,6 +404,16 @@ function initBooShowcase(root) {
 
     // ---- events ----
     els.cards.forEach((card, i) => card.addEventListener('click', () => goTo(i)))
+
+    // "SHOW MENU" → glide down to the menu section
+    root.querySelectorAll('.boo-btn').forEach((btn) =>
+        btn.addEventListener('click', (e) => {
+            const menu = document.querySelector('#menu')
+            if (!menu) return // no menu section on the page → normal link behaviour
+            e.preventDefault()
+            smoothScrollTo(menu)
+        })
+    )
 
     const onVisibility = () => {
         state.hidden = document.hidden
