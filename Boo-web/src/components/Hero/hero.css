@@ -1,0 +1,497 @@
+/* BOO — product showcase. Proportions measured from the reference video.
+   All selectors are scoped to .boo-hero. */
+
+.boo-hero {
+    --ink: #f4ede6;
+    --ink-dim: rgba(244, 237, 230, 0.62);
+    --ink-faint: rgba(244, 237, 230, 0.42);
+    --gold: rgba(214, 186, 132, 0.85);
+    --serif: 'Playfair Display', 'Bodoni Moda', 'Didot', Georgia, serif;
+    --sans: 'Jost', 'Futura', 'Century Gothic', system-ui, sans-serif;
+    --edge: 7.5vw;
+    /* nav side margin */
+    --bean-scale: 1;
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: 540px;
+    color: var(--ink);
+    background: #0d0504;
+    font-family: var(--sans);
+    box-sizing: border-box;
+}
+
+.boo-hero *,
+.boo-hero *::before,
+.boo-hero *::after {
+    box-sizing: border-box;
+}
+
+.boo-hero a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ---------- resting / moving visibility ---------- */
+.boo-bg,
+.boo-product,
+.boo-text {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.boo-bg.is-active,
+.boo-product.is-active,
+.boo-text.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.boo-bg.is-moving,
+.boo-product.is-moving {
+    visibility: visible;
+}
+
+.boo-text.is-moving {
+    visibility: visible;
+    opacity: 1;
+    /* the lines inside carry the animation */
+}
+
+/* ---------- background: dark edges, warm glow behind the product ---------- */
+.boo-bgs {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+}
+
+.boo-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 34% 52% at 46% 46%, var(--glow), transparent 75%),
+        radial-gradient(ellipse 70% 70% at 50% 40%, rgba(60, 30, 20, 0.35), transparent 80%),
+        var(--bg);
+}
+
+/* ---------- giant name strip ---------- */
+.boo-strip {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 9.5%;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.boo-strip-track {
+    display: flex;
+    white-space: nowrap;
+    will-change: transform;
+}
+
+.boo-strip-item {
+    flex: none;
+    padding-right: 0.32em;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(110px, 29vh, 330px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: rgba(255, 228, 210, 0.075);
+    user-select: none;
+}
+
+/* ---------- floating ingredients (inside each background layer) ---------- */
+.boo-bean {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: calc(var(--s) * var(--bean-scale));
+    aspect-ratio: 3 / 4;
+    transform: translate(-50%, -50%) rotate(var(--r));
+    filter: blur(var(--b));
+    animation: boo-drift var(--d) ease-in-out var(--delay) infinite alternate;
+}
+
+.boo-bean svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes boo-drift {
+    from {
+        transform: translate(-50%, -50%) rotate(var(--r));
+    }
+
+    to {
+        transform: translate(-50%, calc(-50% - 8px)) rotate(calc(var(--r) + 10deg));
+    }
+}
+
+/* ---------- nav ---------- */
+.boo-nav {
+    position: absolute;
+    top: 0;
+    left: var(--edge);
+    right: var(--edge);
+    height: 14%;
+    max-height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 5;
+}
+
+.boo-logo {
+    font-family: var(--serif);
+    font-size: clamp(22px, 1.9vw, 34px);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
+
+.boo-nav ul {
+    display: flex;
+    gap: clamp(22px, 4.6vw, 80px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.boo-nav li a {
+    font-size: clamp(11px, 0.9vw, 15px);
+    color: var(--ink-dim);
+    transition: color 0.3s ease;
+}
+
+.boo-nav li a[aria-current='page'],
+.boo-nav li a:hover {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+/* ---------- product: centred, large, cropped by the bottom edge ---------- */
+.boo-products {
+    --pw: 25vw;
+    /* product width — also used to line the logos up */
+    position: absolute;
+    left: 50%;
+    top: 36%;
+    width: var(--pw);
+    height: 100vh;
+    transform: translateX(-50%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.boo-product {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    will-change: transform, opacity;
+}
+
+.boo-product.is-front {
+    z-index: 1;
+    /* the incoming product rises in front of the outgoing one */
+}
+
+.boo-product img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* natural proportions, never stretched */
+    object-position: 50% 0;
+    margin-top: calc(var(--pw) * var(--shift, 0) * -1);
+    /* logos line up across drinks */
+    user-select: none;
+    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.5));
+}
+
+/* ---------- left copy ---------- */
+.boo-copy {
+    position: absolute;
+    left: 5.2vw;
+    top: 42%;
+    width: 36vw;
+    height: 40%;
+    z-index: 3;
+}
+
+.boo-text {
+    position: absolute;
+    inset: 0;
+}
+
+.boo-line {
+    will-change: transform, opacity, filter;
+}
+
+.boo-hero .boo-title {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3.65vw, 66px);
+    line-height: 1.06;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+}
+
+.boo-hero .boo-text .boo-title .boo-line {
+    display: block;
+    color: var(--ink);
+    -webkit-text-fill-color: var(--ink);
+}
+
+.boo-desc {
+    margin: 3.2vh 0 0;
+    max-width: 30vw;
+    font-size: clamp(11px, 0.95vw, 15px);
+    line-height: 1.6;
+    color: var(--ink-dim);
+}
+
+.boo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4.4vh;
+    padding: 0.95em 2.6em;
+    border: 1px solid rgba(244, 237, 230, 0.28);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.25);
+    font-size: clamp(11px, 0.9vw, 15px);
+    color: var(--ink);
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.boo-btn:hover {
+    background: rgba(244, 237, 230, 0.08);
+    border-color: rgba(244, 237, 230, 0.55);
+}
+
+/* ---------- right column ---------- */
+.boo-side {
+    position: absolute;
+    left: 66vw;
+    right: 4.4vw;
+    top: 42.5%;
+    z-index: 3;
+}
+
+.boo-tagline {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(16px, 1.95vw, 36px);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.boo-sub {
+    margin: 1.6vh 0 0;
+    font-size: clamp(10px, 0.8vw, 14px);
+    line-height: 1.6;
+    color: var(--ink-faint);
+}
+
+.boo-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25vw;
+    margin-top: 4.4vh;
+}
+
+.boo-card {
+    appearance: none;
+    position: relative;
+    height: clamp(84px, 15.5vh, 170px);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(244, 237, 230, 0.12);
+    border-radius: clamp(6px, 0.7vw, 12px);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+        border-color 0.35s ease,
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.boo-card img {
+    display: block;
+    width: 78%;
+    /* كل الأكواب بنفس العرض = نفس الحجم */
+    height: auto;
+    max-height: 88%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.boo-card:hover {
+    border-color: rgba(244, 237, 230, 0.4);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+}
+
+.boo-card.is-active {
+    border-color: var(--gold);
+    background: linear-gradient(180deg, rgba(214, 186, 132, 0.16), rgba(214, 186, 132, 0.04));
+    box-shadow: 0 0 0 1px rgba(214, 186, 132, 0.15) inset;
+}
+
+.boo-card:focus-visible {
+    outline: 1px solid var(--gold);
+    outline-offset: 3px;
+}
+
+/* ---------- laptop / small desktop ---------- */
+@media (max-width: 1100px) {
+    .boo-side {
+        left: 64vw;
+        right: 3.5vw;
+    }
+
+    .boo-tagline {
+        white-space: normal;
+    }
+}
+
+/* ---------- mobile & portrait tablet ----------
+   The reference is desktop-only; this keeps its stacking order:
+   strip behind the copy → product centred and cropped at the bottom →
+   product cards as the navigation. */
+@media (max-width: 760px),
+(max-aspect-ratio: 4/5) {
+    .boo-hero {
+        --edge: 6vw;
+        --bean-scale: 2;
+        min-height: 620px;
+    }
+
+    .boo-nav {
+        height: 76px;
+    }
+
+    .boo-nav ul {
+        gap: 16px;
+    }
+
+    .boo-strip {
+        top: 10%;
+    }
+
+    .boo-strip-item {
+        font-size: clamp(90px, 30vw, 260px);
+    }
+
+    .boo-copy {
+        left: 6vw;
+        right: 6vw;
+        top: 15%;
+        width: auto;
+        height: auto;
+        text-align: center;
+    }
+
+    .boo-text {
+        position: absolute;
+        inset: 0 0 auto 0;
+    }
+
+    .boo-hero .boo-title {
+        font-size: clamp(30px, 8.4vw, 60px);
+    }
+
+    .boo-desc {
+        max-width: 34em;
+        margin: 12px auto 0;
+        font-size: 13px;
+    }
+
+    .boo-btn {
+        margin-top: 16px;
+        font-size: 13px;
+    }
+
+    .boo-products {
+        --pw: min(62vw, 460px);
+        top: 43%;
+        width: var(--pw);
+        height: 72vh;
+    }
+
+    .boo-bg {
+        background:
+            radial-gradient(ellipse 60% 34% at 50% 58%, var(--glow), transparent 75%),
+            radial-gradient(ellipse 90% 60% at 50% 50%, rgba(60, 30, 20, 0.35), transparent 80%),
+            var(--bg);
+    }
+
+    .boo-side {
+        left: 6vw;
+        right: 6vw;
+        top: auto;
+        bottom: max(18px, 3vh);
+    }
+
+    .boo-tagline,
+    .boo-sub {
+        display: none;
+    }
+
+    .boo-cards {
+        max-width: 440px;
+        margin: 0 auto;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 16px;
+        background: rgba(13, 5, 4, 0.55);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .boo-card {
+        height: clamp(70px, 11vh, 120px);
+    }
+}
+
+/* small phones: drop secondary nav weight */
+@media (max-width: 380px) {
+    .boo-nav ul {
+        gap: 12px;
+    }
+
+    .boo-desc {
+        display: none;
+    }
+}
+
+/* short landscape phones */
+@media (max-height: 500px) and (orientation: landscape) {
+    .boo-desc {
+        display: none;
+    }
+
+    .boo-card {
+        height: 22vh;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .boo-bean {
+        animation: none;
+    }
+}

@@ -1,0 +1,367 @@
+/* ==========================================================================
+   BOO — Cinematic Intro (all selectors are scoped under .bi / bi-)
+   ========================================================================== */
+
+html.bi-lock,
+html.bi-lock body {
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+html.bi-lock body {
+    margin: 0;
+}
+
+/* Reserve the scrollbar's space while scrolling is locked (only added when the page
+   is taller than the viewport), so the page never shifts when the intro ends. */
+html.bi-gutter {
+    scrollbar-gutter: stable;
+}
+
+/* Brown from the very first frame. In a production build this stylesheet is loaded
+   before any script runs, so the page itself is already chocolate brown (no blank
+   frame). The intro adds .bi-done to <html> the moment the surface starts to tear,
+   so the real page shows through with its own background. */
+html:not(.bi-done),
+html:not(.bi-done) body {
+    background-color: #2a1409 !important;
+}
+
+/* Full-screen, edge-to-edge layer: no margins, borders, frames or rounded corners */
+.bi {
+    --bi-caramel: #c98a55;
+    --bean: clamp(72px, 11.5vmin, 150px);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    max-width: 100%;
+    height: 100vh;
+    height: 100svh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    z-index: 9999;
+    overflow: hidden;
+    contain: layout paint;
+    background: transparent;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.bi *,
+.bi *::before,
+.bi *::after {
+    box-sizing: border-box;
+}
+
+.bi-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* ---------- the brown surface: a physical layer lying over the real page ---------- */
+.bi-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.bi-surface {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #2a1409;
+}
+
+.bi-bg {
+    position: absolute;
+    inset: -6%;
+    background:
+        radial-gradient(ellipse 62% 56% at 50% 48%, #57301a 0%, #432212 30%, #2e160a 60%, #1a0b05 86%, #110703 100%);
+    transform: scale(1.04);
+    will-change: transform;
+}
+
+/* very soft, silky large-scale variation */
+.bi-bg__silk {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: soft-light;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* caramel glow around the centre */
+.bi-light {
+    position: absolute;
+    inset: -15%;
+    background:
+        radial-gradient(ellipse 26% 26% at 50% 50%, rgba(214, 145, 85, 0.22), transparent 72%),
+        radial-gradient(ellipse 50% 46% at 50% 48%, rgba(165, 108, 66, 0.1), transparent 75%);
+    mix-blend-mode: screen;
+}
+
+.bi-sheen {
+    position: absolute;
+    inset: 0 -50%;
+    background: linear-gradient(105deg, transparent 43%, rgba(255, 222, 186, 0.05) 50%, transparent 57%);
+    mix-blend-mode: screen;
+}
+
+/* fine, realistic grain */
+.bi-bg__grain {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: overlay;
+    opacity: 0.07;
+    pointer-events: none;
+}
+
+.bi-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 75% 70% at 50% 48%, transparent 36%, rgba(8, 3, 1, 0.55) 72%, rgba(5, 2, 1, 0.9) 100%);
+}
+
+/* ---------- official logo, top centre, drawn by hand ---------- */
+.bi-brand {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 7%;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+}
+
+.bi-logo {
+    display: block;
+    height: clamp(64px, 13vmin, 140px);
+    width: auto;
+    overflow: visible;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+
+.bi-logo__fill {
+    opacity: 0;
+}
+
+.bi-logo__line {
+    fill: none;
+    stroke: #d6a66c;
+    stroke-width: 1.15;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+}
+
+/* ---------- photoreal coffee bean ---------- */
+.bi-bean {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    z-index: 3;
+    width: var(--bean);
+    aspect-ratio: 100 / 140;
+    margin-left: calc(var(--bean) / -2);
+    margin-top: calc(var(--bean) * -0.7);
+    opacity: 0;
+    clip-path: circle(0% at 50% 62%);
+    will-change: transform, filter;
+}
+
+.bi-bean__half {
+    position: absolute;
+    inset: 0;
+    filter: drop-shadow(0 calc(var(--bean) * 0.09) calc(var(--bean) * 0.1) rgba(0, 0, 0, 0.6)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+    will-change: transform;
+}
+
+.bi-bean__half img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.bi-bean__crack {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.bi-bean__crack path {
+    fill: none;
+    stroke: #ffe9c8;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    filter: drop-shadow(0 0 1.5px rgba(255, 210, 150, 1)) drop-shadow(0 0 4px rgba(255, 170, 90, 0.8));
+}
+
+/* Loading line */
+.bi-loader {
+    position: absolute;
+    left: 50%;
+    top: calc(52% + var(--bean) * 0.7 + 4vmin);
+    z-index: 3;
+    width: calc(var(--bean) * 1.2);
+    height: 2px;
+    margin-left: calc(var(--bean) * -0.6);
+    background: rgba(201, 138, 85, 0.2);
+    border-radius: 2px;
+    opacity: 0;
+}
+
+.bi-loader span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #a56c42, #e09a5f);
+    box-shadow: 0 0 10px rgba(224, 154, 95, 0.7);
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+/* Fragments of roasted bean */
+.bi-frags {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    z-index: 4;
+}
+
+.bi-frag {
+    position: absolute;
+    width: calc(var(--bean) * 0.11);
+    height: calc(var(--bean) * 0.085);
+    margin: calc(var(--bean) * -0.04) 0 0 calc(var(--bean) * -0.055);
+    border-radius: 46% 58% 40% 62%;
+    background: radial-gradient(circle at 32% 28%, #8a4a26 0%, #4a200d 45%, #1e0c05 85%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+}
+
+.bi-frag--1 {
+    width: calc(var(--bean) * 0.07);
+    height: calc(var(--bean) * 0.055);
+}
+
+.bi-frag--2 {
+    width: calc(var(--bean) * 0.15);
+    height: calc(var(--bean) * 0.11);
+    border-radius: 60% 40% 55% 45%;
+}
+
+.bi-frag--3 {
+    width: calc(var(--bean) * 0.04);
+    height: calc(var(--bean) * 0.04);
+    background: #3a1a0b;
+    box-shadow: none;
+}
+
+/* ---------- the torn fibres along the opening ---------- */
+.bi-tear-edge {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(180deg, #8c5a36, #b07a4c 50%, #8c5a36);
+    clip-path: polygon(0 0, 0 0, 0 0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ---------- skip ---------- */
+.bi-skip {
+    position: absolute;
+    right: clamp(16px, 3vw, 32px);
+    bottom: clamp(16px, 3vw, 32px);
+    bottom: max(clamp(16px, 3vw, 32px), env(safe-area-inset-bottom));
+    z-index: 5;
+    font: 500 10px/1 'DM Sans', sans-serif;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(243, 230, 210, 0.65);
+    background: rgba(20, 10, 5, 0.35);
+    border: 1px solid rgba(243, 230, 210, 0.2);
+    border-radius: 30px;
+    padding: 10px 16px 10px 19px;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    animation: bi-skip-in 0.8s ease 1.4s forwards;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.bi-skip:hover,
+.bi-skip:focus-visible {
+    color: #fffaf2;
+    border-color: rgba(201, 138, 85, 0.7);
+    outline: none;
+}
+
+@keyframes bi-skip-in {
+    to {
+        opacity: 1;
+    }
+}
+
+/* ---------- CSS-only path (reduced motion / GSAP unavailable) ---------- */
+.bi--static .bi-bg {
+    transform: none;
+}
+
+.bi--static .bi-brand,
+.bi--static .bi-bean,
+.bi--static .bi-logo__fill {
+    opacity: 1;
+    clip-path: none;
+}
+
+.bi--static .bi-logo__lines {
+    opacity: 0;
+}
+
+.bi--out {
+    opacity: 0;
+    transition: opacity 0.85s ease;
+}
+
+/* ---------- responsive ---------- */
+@media (max-aspect-ratio: 4/5) {
+    .bi {
+        --bean: clamp(72px, 22vw, 130px);
+    }
+
+    .bi-brand {
+        top: 9%;
+    }
+
+    .bi-logo {
+        height: clamp(72px, 15vh, 130px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bi-skip {
+        animation: none;
+        opacity: 1;
+    }
+}
