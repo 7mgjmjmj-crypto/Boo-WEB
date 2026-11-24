@@ -41,6 +41,11 @@ const SLIDES = [
         bg: '#0d0504',
         glow: 'rgba(110, 58, 34, 0.55)',
         decor: 'bean',
+        ar: {
+            line1: 'آيس أمريكانو',
+            line2: 'ورغوة الكاكاو الباردة',
+            desc: 'إسبريسو مزدوج فوق ثلج صافٍ، تعلوه رغوة باردة حريرية مع الكاكاو وحبوب البن المحمّصة.',
+        },
     },
     {
         img: IMG.matcha,
@@ -52,6 +57,11 @@ const SLIDES = [
         bg: '#050d06',
         glow: 'rgba(70, 120, 55, 0.5)',
         decor: 'leaf',
+        ar: {
+            line1: 'آيس ماتشا',
+            line2: 'وكريمة الفراولة',
+            desc: 'ماتشا مطحونة على الحجر تمتزج بالحليب البارد، تعلوها سحابة من كريمة الفراولة الطازجة.',
+        },
     },
     {
         img: IMG.peach,
@@ -63,19 +73,51 @@ const SLIDES = [
         bg: '#120602',
         glow: 'rgba(190, 95, 30, 0.45)',
         decor: 'peach',
+        ar: {
+            line1: 'شاي الخوخ المثلّج',
+            line2: 'وفاكهة الباشن فروت',
+            desc: 'شاي أسود منقوع على مهل مع شرائح الخوخ الناضج والباشن فروت وغصن نعناع طازج.',
+        },
     },
     {
         img: IMG.blue,
         logo: 1.514, // logo bottom ÷ image width (lines the logos up)
-        line1: 'Blueberry Latte',
+        line1: 'Blue Cloud',
         line2: '& Butterfly Pea',
         desc: 'Espresso and cold milk over a butterfly-pea base, finished with blueberry cream and syrup.',
-        strip: 'Blueberry Latte · Butterfly Pea',
+        strip: 'Blue Cloud · Butterfly Pea',
         bg: '#04060f',
         glow: 'rgba(70, 80, 190, 0.45)',
         decor: 'berry',
+        ar: {
+            line1: 'بلو كلاود',
+            line2: 'وزهرة البازلاء الزرقاء',
+            desc: 'إسبريسو مع حليب بارد فوق قاعدة زهرة البازلاء الزرقاء، تعلوه كريمة التوت الأزرق ولمسة من السيروب.',
+        },
     },
 ]
+
+// Texts outside the slides, in both languages.
+const UI = {
+    en: {
+        btn: 'SHOW MENU',
+        tagline: 'Slow Brewed, Served Cold',
+        sub: 'Small-batch ingredients over crystal-clear ice.<br />Fresh, smooth and made to order.',
+        toggle: 'العربية', // label shows the language you switch TO
+    },
+    ar: {
+        btn: 'اعرض المنيو',
+        tagline: 'يُحضَّر على مهل، ويُقدَّم باردًا',
+        sub: 'مكونات مختارة بعناية، فوق مكعبات ثلج صافية.<br />طازج، ناعم، ويُحضَّر خصيصًا لك.',
+        toggle: 'English',
+    },
+}
+const LANG_KEY = 'boo-lang'
+
+// Escape text for use inside an HTML attribute.
+const esc = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+// data-en / data-ar pair: the language switch swaps the element's content.
+const i18n = (en, arText) => `data-en="${esc(en)}" data-ar="${esc(arText)}"`
 
 // ---- timing (ms). Choreography measured from the reference at 30 fps. ----
 const HOLD = 2000// time a product stays on screen (the video doesn't show this; from your brief)
@@ -151,20 +193,22 @@ function buildMarkup(root) {
     ).join('')}
     </div>
 
+    <button type="button" class="boo-lang" aria-label="Switch language" ${i18n(UI.en.toggle, UI.ar.toggle)}>${UI.en.toggle}</button>
+
     <div class="boo-copy">
       ${SLIDES.map(
         (s, i) => `
         <div class="boo-text" data-index="${i}">
-          <div class="boo-title" role="heading" aria-level="2"><span class="boo-line">${s.line1}</span><span class="boo-line">${s.line2}</span></div>
-          <p class="boo-desc boo-line">${s.desc}</p>
-          <a class="boo-btn boo-line" href="#menu">SHOW MENU</a>
+          <div class="boo-title" role="heading" aria-level="2"><span class="boo-line" ${i18n(s.line1, s.ar.line1)}>${s.line1}</span><span class="boo-line" ${i18n(s.line2, s.ar.line2)}>${s.line2}</span></div>
+          <p class="boo-desc boo-line" ${i18n(s.desc, s.ar.desc)}>${s.desc}</p>
+          <a class="boo-btn boo-line" href="#menu"><span class="boo-btn-label" ${i18n(UI.en.btn, UI.ar.btn)}>${UI.en.btn}</span><span class="boo-btn-arrow" aria-hidden="true">→</span></a>
         </div>`
     ).join('')}
     </div>
 
     <aside class="boo-side">
-      <p class="boo-tagline">Slow Brewed, Served Cold</p>
-      <p class="boo-sub">Small-batch ingredients over crystal-clear ice.<br />Fresh, smooth and made to order.</p>
+      <p class="boo-tagline" ${i18n(UI.en.tagline, UI.ar.tagline)}>${UI.en.tagline}</p>
+      <p class="boo-sub" ${i18n(UI.en.sub, UI.ar.sub)}>${UI.en.sub}</p>
       <div class="boo-cards" role="group" aria-label="Choose product">
         ${SLIDES.map(
         (s, i) => `
@@ -414,6 +458,54 @@ function initBooShowcase(root) {
             smoothScrollTo(menu)
         })
     )
+
+    // ---- language switch (hero only) ----
+    const copyEl = root.querySelector('.boo-copy')
+    const sideEl = root.querySelector('.boo-side')
+    const langBtn = root.querySelector('.boo-lang')
+    let lang = 'en'
+
+    function applyLang(next) {
+        lang = next
+        const isAr = next === 'ar'
+        root.classList.toggle('is-ar', isAr)
+        root.setAttribute('lang', next)
+        copyEl.setAttribute('dir', isAr ? 'rtl' : 'ltr')
+        sideEl.setAttribute('dir', isAr ? 'rtl' : 'ltr')
+        root.querySelectorAll('[data-en]').forEach((el) => (el.innerHTML = el.dataset[next]))
+        langBtn.setAttribute('lang', isAr ? 'en' : 'ar')
+        try {
+            localStorage.setItem(LANG_KEY, next)
+        } catch (e) { }
+    }
+
+    langBtn.addEventListener('click', () => {
+        const next = lang === 'en' ? 'ar' : 'en'
+        if (reducedMotion.matches) return applyLang(next)
+        // fade the text out, swap the language, fade back in
+        const parts = [copyEl, sideEl]
+        const out = parts.map((el) =>
+            el.animate([{ opacity: 1, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(6px)' }], {
+                duration: 220,
+                easing: EASE_IN,
+                fill: 'forwards',
+            })
+        )
+        Promise.all(out.map((a) => a.finished)).then(() => {
+            applyLang(next)
+            parts.forEach((el, i) => {
+                el.animate([{ opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)' }], {
+                    duration: 420,
+                    easing: EASE_OUT,
+                })
+                out[i].cancel()
+            })
+        })
+    })
+
+    try {
+        if (localStorage.getItem(LANG_KEY) === 'ar') applyLang('ar')
+    } catch (e) { }
 
     const onVisibility = () => {
         state.hidden = document.hidden

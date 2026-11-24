@@ -1,3 +1,6 @@
+/* Arabic fonts for the language switch */
+@import url('https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap');
+
 /* BOO — product showcase. Proportions measured from the reference video.
    All selectors are scoped to .boo-hero. */
 
@@ -8,6 +11,10 @@
     --gold: rgba(214, 186, 132, 0.85);
     --serif: 'Playfair Display', 'Bodoni Moda', 'Didot', Georgia, serif;
     --sans: 'Jost', 'Futura', 'Century Gothic', system-ui, sans-serif;
+    --ar-display: 'El Messiri', 'IBM Plex Sans Arabic', sans-serif;
+    /* Arabic titles */
+    --ar-text: 'IBM Plex Sans Arabic', sans-serif;
+    /* Arabic body text */
     --edge: 7.5vw;
     /* nav side margin */
     --bean-scale: 1;
@@ -487,6 +494,158 @@
 
     .boo-card {
         height: 22vh;
+    }
+}
+
+/* ==========================================================
+   Language switch + Arabic version
+   ========================================================== */
+.boo-lang {
+    appearance: none;
+    position: absolute;
+    top: clamp(18px, 4.5vh, 40px);
+    right: 4.4vw;
+    z-index: 6;
+    padding: 0.6em 1.4em;
+    border: 1px solid rgba(244, 237, 230, 0.28);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--ink);
+    font-family: var(--ar-text);
+    font-size: clamp(12px, 0.9vw, 15px);
+    font-weight: 500;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.boo-lang[lang='en'] {
+    font-family: var(--sans);
+    letter-spacing: 0.04em;
+}
+
+.boo-lang:hover {
+    background: rgba(244, 237, 230, 0.08);
+    border-color: rgba(244, 237, 230, 0.55);
+}
+
+.boo-lang:focus-visible {
+    outline: 1px solid var(--gold);
+    outline-offset: 3px;
+}
+
+/* arrow inside the button: Arabic only */
+.boo-btn-arrow {
+    display: none;
+}
+
+/* ---- Arabic layout ---- */
+.boo-hero.is-ar .boo-copy {
+    width: 31.5vw;
+}
+
+.boo-hero.is-ar .boo-title .boo-line {
+    white-space: nowrap;
+    /* each title line stays on one line, like the design */
+}
+
+.boo-hero.is-ar .boo-cards {
+    direction: ltr;
+    /* cards keep the same order in both languages */
+}
+
+.boo-hero.is-ar .boo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* = right side in RTL */
+}
+
+.boo-hero.is-ar .boo-title {
+    font-family: var(--ar-display);
+    font-weight: 400;
+    font-size: clamp(28px, 3.5vw, 62px);
+    line-height: 1.38;
+    letter-spacing: 0;
+}
+
+.boo-hero.is-ar .boo-desc {
+    max-width: none;
+    margin-top: 2.6vh;
+    font-family: var(--ar-text);
+    font-weight: 400;
+    font-size: clamp(12px, 1.05vw, 17px);
+    line-height: 1.9;
+}
+
+.boo-hero.is-ar .boo-btn {
+    align-self: flex-end;
+    /* = left side in RTL, like the design */
+    gap: 1.6em;
+    padding: 0.8em 2.4em;
+    font-family: var(--ar-text);
+    font-weight: 500;
+    font-size: clamp(13px, 1.1vw, 18px);
+    letter-spacing: 0;
+}
+
+.boo-hero.is-ar .boo-btn-arrow {
+    display: inline-block;
+    font-family: var(--sans);
+}
+
+.boo-hero.is-ar .boo-tagline {
+    font-family: var(--ar-display);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(16px, 1.9vw, 34px);
+    line-height: 1.5;
+}
+
+.boo-hero.is-ar .boo-sub {
+    margin-top: 1.4vh;
+    font-family: var(--ar-text);
+    font-weight: 400;
+    font-size: clamp(11px, 0.95vw, 16px);
+    line-height: 1.85;
+    color: var(--ink-dim);
+}
+
+@media (max-width: 760px),
+(max-aspect-ratio: 4/5) {
+    .boo-lang {
+        top: 18px;
+        right: 6vw;
+        font-size: 12px;
+    }
+
+    .boo-hero.is-ar .boo-copy {
+        width: auto;
+    }
+
+    .boo-hero.is-ar .boo-text {
+        align-items: center;
+    }
+
+    .boo-hero.is-ar .boo-title {
+        font-size: clamp(26px, 7.4vw, 52px);
+    }
+
+    .boo-hero.is-ar .boo-title .boo-line {
+        white-space: normal;
+    }
+
+    .boo-hero.is-ar .boo-desc {
+        font-size: 13px;
+    }
+
+    .boo-hero.is-ar .boo-btn {
+        align-self: center;
+        font-size: 14px;
     }
 }
 
